@@ -4,12 +4,36 @@ let deck, playerHand, dealerHand;
 let hasSplit = false;
 let splitHand = null;
 let isSplitTurn = false;
-let coinBalance = 50000;
+
+let coinBalance = parseInt(localStorage.getItem('coinBalance')) || 50000;
 let currentBet = 0;
 
 const root = document.getElementById('root');
 const coinDisplay = document.getElementById('coin-balance');
 const betDisplay = document.getElementById('current-bet');
+
+// Placeholder sound effects
+const sounds = {
+  click: new Audio('click.mp3'),         // Button click
+  win: new Audio('win.mp3'),             // Win sound
+  lose: new Audio('lose.mp3'),           // Lose sound
+  blackjack: new Audio('blackjack.mp3')  // Blackjack!
+};
+
+function updateDisplay() {
+  coinDisplay.textContent = coinBalance;
+  coinDisplay.classList.add('coin-flash');
+  setTimeout(() => coinDisplay.classList.remove('coin-flash'), 400);
+  betDisplay.textContent = currentBet;
+  toggleGameButtons(currentBet > 0);
+  localStorage.setItem('coinBalance', coinBalance);
+}
+
+function toggleGameButtons(enabled) {
+  document.querySelectorAll('.buttons button').forEach(btn => {
+    btn.disabled = !enabled;
+  });
+}
 
 function initialiseGame() {
   if (currentBet === 0) {
@@ -32,13 +56,8 @@ function initialiseGame() {
   checkForBlackjack();
 }
 
-function updateDisplay() {
-  coinDisplay.textContent = coinBalance;
-  betDisplay.textContent = currentBet;
-}
-
 window.placeBet = function (amount) {
-  if (deck) return; // prevent betting mid-game
+  if (deck) return;
 
   if (amount === 'max') {
     currentBet = Math.min(5000, coinBalance);
@@ -51,6 +70,7 @@ window.placeBet = function (amount) {
 
   coinBalance -= currentBet;
   updateDisplay();
+  sounds.click.play();
   initialiseGame();
 };
 
@@ -87,6 +107,7 @@ function renderGame() {
     </div>
   `;
 
+  toggleGameButtons(currentBet > 0);
   animateCards();
 }
 
@@ -155,11 +176,13 @@ function checkForBlackjack() {
   }
 
   if (playerVal === 21) {
+    sounds.blackjack.play();
     setTimeout(() => showModal(`Blackjack!<br>You: 21 — Win!`), 500);
     return true;
   }
 
   if (dealerVal === 21) {
+    sounds.lose.play();
     setTimeout(() => showModal(`Dealer has Blackjack!<br>Dealer: 21 — Lose!`), 500);
     return true;
   }
@@ -180,8 +203,12 @@ function endGame() {
   let message = `Dealer: ${dealerVal}<br>You: ${playerVal} — ${outcome(playerVal, dealerVal)}`;
 
   const result = outcome(playerVal, dealerVal);
-  if (result === 'Win!') winnings += currentBet * 2;
+  if (result === 'Win!') {
+    winnings += currentBet * 2;
+    sounds.win.play();
+  }
   if (result === 'Push.') winnings += currentBet;
+  if (result === 'Lose!') sounds.lose.play();
 
   if (hasSplit) {
     const splitResult = outcome(splitVal, dealerVal);
@@ -243,5 +270,6 @@ function animateDealerDraw() {
   draw();
 }
 
-// Start with display only
+// Initialise UI
 updateDisplay();
+toggleGameButtons(false);
