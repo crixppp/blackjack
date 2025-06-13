@@ -33,8 +33,8 @@ button {
   margin: 0.5rem;
   border: none;
   border-radius: 0.75rem;
-  background: #2979ff;
-  color: white;
+  background: #ffffff;
+  color: #121212;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -42,7 +42,7 @@ button {
 }
 
 button:hover {
-  background: #5393ff;
+  background: #e0e0e0;
   transform: scale(1.05);
 }
 
@@ -62,4 +62,49 @@ button:hover {
   font-size: 1.2rem;
   font-weight: 600;
   color: #fff;
+}
+
+/* Modal Styles */
+#modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+#modal.hidden {
+  display: none;
+}
+
+#modal-content {
+  background: #1e1e1e;
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+}
+
+#modal-content button {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  color: #121212;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+#modal-content button:hover {
+  background: #e0e0e0;
+  transform: scale(1.05);
 }
