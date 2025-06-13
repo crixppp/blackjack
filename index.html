@@ -6,16 +6,17 @@
     <title>Blackjack</title>
     <link href="style.css" rel="stylesheet" />
   </head>
-  <body>
-    <div id="root"></div>
+<body>
+  <div id="root"></div>
 
-    <div id="modal" class="hidden">
-      <div id="modal-content">
-        <p id="modal-message"></p>
-        <button onclick="initialiseGame()">Play Again</button>
-      </div>
+  <!-- KEEP OUTSIDE of root -->
+  <div id="modal" class="hidden">
+    <div id="modal-content">
+      <p id="modal-message"></p>
+      <button id="play-again">Play Again</button>
     </div>
+  </div>
 
-    <script src="main.js" type="module"></script>
-  </body>
+  <script src="main.js" type="module"></script>
+</body>
 </html>
