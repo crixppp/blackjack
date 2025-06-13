@@ -8,9 +8,6 @@ let isSplitTurn = false;
 const root = document.getElementById('root');
 
 function initialiseGame() {
-  const modal = document.getElementById('modal');
-  if (modal) modal.classList.remove('show');
-
   deck = createDeck();
   playerHand = [deck.pop(), deck.pop()];
   dealerHand = [deck.pop(), deck.pop()];
@@ -131,8 +128,15 @@ function outcome(player, dealer) {
 function showModal(message) {
   const modal = document.getElementById('modal');
   const text = document.getElementById('modal-message');
+  const playBtn = document.getElementById('play-again');
+
   text.innerHTML = message;
   modal.classList.add('show');
+
+  playBtn.onclick = () => {
+    modal.classList.remove('show');
+    initialiseGame();
+  };
 }
 
 function animateCards() {
