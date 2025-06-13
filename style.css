@@ -1,42 +1,49 @@
 /* style.css */
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f2f2f2;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #121212;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  color: #f0f0f0;
 }
 
 #root {
-  background: white;
+  background: #1e1e1e;
   padding: 2rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  border-radius: 1.5rem;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
   text-align: center;
   width: 90%;
-  max-width: 400px;
+  max-width: 420px;
+  transition: all 0.3s ease;
 }
 
 h1 {
   margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 2rem;
+  color: #ffffff;
 }
 
 button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1.6rem;
   margin: 0.5rem;
   border: none;
-  border-radius: 0.5rem;
-  background: #007bff;
+  border-radius: 0.75rem;
+  background: #2979ff;
   color: white;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background: #0056b3;
+  background: #5393ff;
+  transform: scale(1.05);
 }
 
 .card-container {
@@ -44,11 +51,15 @@ button:hover {
   justify-content: center;
   margin-top: 1rem;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .card {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  background: #fff;
+  border-radius: 0.5rem;
+  background: #2a2a2a;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
 }
