@@ -4,10 +4,19 @@ let deck, playerHand, dealerHand;
 let hasSplit = false;
 let splitHand = null;
 let isSplitTurn = false;
+let coinBalance = 50000;
+let currentBet = 0;
 
 const root = document.getElementById('root');
+const coinDisplay = document.getElementById('coin-balance');
+const betDisplay = document.getElementById('current-bet');
 
 function initialiseGame() {
+  if (currentBet === 0) {
+    alert('Please place a bet before starting.');
+    return;
+  }
+
   const modal = document.getElementById('modal');
   if (modal) modal.classList.remove('show');
 
@@ -17,8 +26,33 @@ function initialiseGame() {
   hasSplit = false;
   splitHand = null;
   isSplitTurn = false;
+
+  updateDisplay();
   renderGame();
+  checkForBlackjack();
 }
+
+function updateDisplay() {
+  coinDisplay.textContent = coinBalance;
+  betDisplay.textContent = currentBet;
+}
+
+window.placeBet = function (amount) {
+  if (deck) return; // prevent betting mid-game
+
+  if (amount === 'max') {
+    currentBet = Math.min(5000, coinBalance);
+  } else if (coinBalance >= amount) {
+    currentBet = amount;
+  } else {
+    alert('Not enough coins!');
+    return;
+  }
+
+  coinBalance -= currentBet;
+  updateDisplay();
+  initialiseGame();
+};
 
 function renderGame() {
   const dealerTotal = calculateValue(dealerHand);
@@ -71,6 +105,7 @@ window.hit = function () {
 
   checkForBust();
   renderGame();
+  checkForBlackjack();
 };
 
 window.stand = function () {
@@ -84,10 +119,16 @@ window.stand = function () {
 };
 
 window.doubleDown = function () {
-  if (isSplitTurn) splitHand.push(deck.pop());
-  else playerHand.push(deck.pop());
-
-  window.stand();
+  if (coinBalance >= currentBet) {
+    coinBalance -= currentBet;
+    currentBet *= 2;
+    updateDisplay();
+    if (isSplitTurn) splitHand.push(deck.pop());
+    else playerHand.push(deck.pop());
+    window.stand();
+  } else {
+    alert('Not enough coins to double down!');
+  }
 };
 
 window.split = function () {
@@ -96,11 +137,34 @@ window.split = function () {
   playerHand.push(deck.pop());
   splitHand.push(deck.pop());
   renderGame();
+  checkForBlackjack();
 };
 
 function checkForBust() {
   const activeHand = isSplitTurn ? splitHand : playerHand;
   if (calculateValue(activeHand) > 21) window.stand();
+}
+
+function checkForBlackjack() {
+  const playerVal = calculateValue(playerHand);
+  const dealerVal = calculateValue(dealerHand);
+
+  if (playerVal === 21 && dealerVal === 21) {
+    setTimeout(() => endGame(), 500);
+    return true;
+  }
+
+  if (playerVal === 21) {
+    setTimeout(() => showModal(`Blackjack!<br>You: 21 — Win!`), 500);
+    return true;
+  }
+
+  if (dealerVal === 21) {
+    setTimeout(() => showModal(`Dealer has Blackjack!<br>Dealer: 21 — Lose!`), 500);
+    return true;
+  }
+
+  return false;
 }
 
 function canSplit() {
@@ -112,12 +176,25 @@ function endGame() {
   const dealerVal = calculateValue(dealerHand);
   const splitVal = hasSplit ? calculateValue(splitHand) : null;
 
+  let winnings = 0;
   let message = `Dealer: ${dealerVal}<br>You: ${playerVal} — ${outcome(playerVal, dealerVal)}`;
+
+  const result = outcome(playerVal, dealerVal);
+  if (result === 'Win!') winnings += currentBet * 2;
+  if (result === 'Push.') winnings += currentBet;
+
   if (hasSplit) {
-    message += `<br>Split Hand: ${splitVal} — ${outcome(splitVal, dealerVal)}`;
+    const splitResult = outcome(splitVal, dealerVal);
+    message += `<br>Split Hand: ${splitVal} — ${splitResult}`;
+    if (splitResult === 'Win!') winnings += currentBet * 2;
+    if (splitResult === 'Push.') winnings += currentBet;
   }
 
-  setTimeout(() => showModal(message), 1000); // 1 second delay
+  coinBalance += winnings;
+  currentBet = 0;
+  updateDisplay();
+
+  setTimeout(() => showModal(message), 1000);
 }
 
 function outcome(player, dealer) {
@@ -166,5 +243,5 @@ function animateDealerDraw() {
   draw();
 }
 
-// Start game
-initialiseGame();
+// Start with display only
+updateDisplay();
