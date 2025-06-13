@@ -23,16 +23,33 @@ function initialiseGame() {
 function renderGame() {
   root.innerHTML = `
     <h1>Blackjack</h1>
-    <div><strong>You:</strong> ${renderCards(playerHand)}</div>
-    ${hasSplit ? `<div><strong>Split Hand:</strong> ${renderCards(splitHand)}</div>` : ''}
-    <div><strong>Dealer:</strong> ${renderCards(dealerHand, true)}</div>
-    <div class="card-container">
+
+    <div class="hand-section">
+      <div class="label">Dealer:</div>
+      <div class="card-container dealer">${renderCards(dealerHand, true)}</div>
+    </div>
+
+    ${hasSplit ? `
+      <div class="hand-section">
+        <div class="label">Split Hand:</div>
+        <div class="card-container split">${renderCards(splitHand)}</div>
+      </div>
+    ` : ''}
+
+    <div class="hand-section">
+      <div class="label">You:</div>
+      <div class="card-container player">${renderCards(playerHand)}</div>
+    </div>
+
+    <div class="card-container buttons">
       <button onclick="hit()">Hit</button>
       <button onclick="stand()">Stand</button>
       <button onclick="doubleDown()">Double</button>
       ${canSplit() && !hasSplit ? '<button onclick="split()">Split</button>' : ''}
     </div>
   `;
+
+  animateCards();
 }
 
 function renderCards(hand, hideFirst = false) {
@@ -112,6 +129,17 @@ function showModal(message) {
   const text = document.getElementById('modal-message');
   text.innerHTML = message;
   modal.classList.add('show');
+}
+
+function animateCards() {
+  document.querySelectorAll('.card').forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(-10px)';
+    setTimeout(() => {
+      card.style.opacity = '1';
+      card.style.transform = 'translateY(0)';
+    }, i * 80);
+  });
 }
 
 // Start game
