@@ -1,4 +1,3 @@
-// main.js
 import { createDeck, calculateValue } from './cards.js';
 
 let deck, playerHand, dealerHand;
@@ -9,6 +8,9 @@ let isSplitTurn = false;
 const root = document.getElementById('root');
 
 function initialiseGame() {
+  const modal = document.getElementById('modal');
+  if (modal) modal.classList.add('hidden');
+
   deck = createDeck();
   playerHand = [deck.pop(), deck.pop()];
   dealerHand = [deck.pop(), deck.pop()];
@@ -21,9 +23,9 @@ function initialiseGame() {
 function renderGame() {
   root.innerHTML = `
     <h1>Blackjack</h1>
-    <div><strong>Dealer:</strong> ${renderCards(dealerHand, true)}</div>
     <div><strong>You:</strong> ${renderCards(playerHand)}</div>
     ${hasSplit ? `<div><strong>Split Hand:</strong> ${renderCards(splitHand)}</div>` : ''}
+    <div><strong>Dealer:</strong> ${renderCards(dealerHand, true)}</div>
     <div class="card-container">
       <button onclick="hit()">Hit</button>
       <button onclick="stand()">Stand</button>
@@ -90,13 +92,12 @@ function endGame() {
   const dealerVal = calculateValue(dealerHand);
   const splitVal = hasSplit ? calculateValue(splitHand) : null;
 
-  let message = `Dealer: ${dealerVal}\nYou: ${playerVal} — ` + outcome(playerVal, dealerVal);
+  let message = `Dealer: ${dealerVal}<br>You: ${playerVal} — ${outcome(playerVal, dealerVal)}`;
   if (hasSplit) {
-    message += `\nSplit Hand: ${splitVal} — ` + outcome(splitVal, dealerVal);
+    message += `<br>Split Hand: ${splitVal} — ${outcome(splitVal, dealerVal)}`;
   }
 
-  alert(message);
-  initialiseGame();
+  showModal(message);
 }
 
 function outcome(player, dealer) {
@@ -104,6 +105,13 @@ function outcome(player, dealer) {
   if (dealer > 21 || player > dealer) return 'Win!';
   if (player < dealer) return 'Lose!';
   return 'Push.';
+}
+
+function showModal(message) {
+  const modal = document.getElementById('modal');
+  const text = document.getElementById('modal-message');
+  text.innerHTML = message;
+  modal.classList.remove('hidden');
 }
 
 // Start game
