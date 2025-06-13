@@ -21,23 +21,27 @@ function initialiseGame() {
 }
 
 function renderGame() {
+  const dealerTotal = calculateValue(dealerHand);
+  const playerTotal = calculateValue(playerHand);
+  const splitTotal = hasSplit ? calculateValue(splitHand) : 0;
+
   root.innerHTML = `
     <h1>Blackjack</h1>
 
     <div class="hand-section">
-      <div class="label">Dealer:</div>
-      <div class="card-container dealer">${renderCards(dealerHand, true)}</div>
+      <div class="label">Dealer ${isSplitTurn || !hasSplit ? `(${dealerTotal})` : ''}:</div>
+      <div class="card-container dealer">${renderCards(dealerHand, !(isSplitTurn || !hasSplit))}</div>
     </div>
 
     ${hasSplit ? `
       <div class="hand-section">
-        <div class="label">Split Hand:</div>
+        <div class="label">Split Hand (${splitTotal}):</div>
         <div class="card-container split">${renderCards(splitHand)}</div>
       </div>
     ` : ''}
 
     <div class="hand-section">
-      <div class="label">You:</div>
+      <div class="label">You (${playerTotal}):</div>
       <div class="card-container player">${renderCards(playerHand)}</div>
     </div>
 
