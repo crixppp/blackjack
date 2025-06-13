@@ -8,6 +8,9 @@ let isSplitTurn = false;
 const root = document.getElementById('root');
 
 function initialiseGame() {
+  const modal = document.getElementById('modal');
+  if (modal) modal.classList.remove('show');
+
   deck = createDeck();
   playerHand = [deck.pop(), deck.pop()];
   dealerHand = [deck.pop(), deck.pop()];
@@ -77,8 +80,7 @@ window.stand = function () {
     return;
   }
 
-  while (calculateValue(dealerHand) < 17) dealerHand.push(deck.pop());
-  endGame();
+  animateDealerDraw();
 };
 
 window.doubleDown = function () {
@@ -148,6 +150,20 @@ function animateCards() {
       card.style.transform = 'translateY(0)';
     }, i * 80);
   });
+}
+
+function animateDealerDraw() {
+  function draw() {
+    if (calculateValue(dealerHand) < 17) {
+      dealerHand.push(deck.pop());
+      renderGame();
+      setTimeout(draw, 600);
+    } else {
+      endGame();
+    }
+  }
+
+  draw();
 }
 
 // Start game
