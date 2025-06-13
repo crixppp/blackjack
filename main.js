@@ -57,7 +57,7 @@ function initialiseGame() {
 }
 
 window.placeBet = function (amount) {
-  if (deck) return;
+  if (deck && playerHand && playerHand.length > 0) return;
 
   if (amount === 'max') {
     currentBet = Math.min(5000, coinBalance);
