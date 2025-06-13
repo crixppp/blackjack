@@ -9,7 +9,7 @@ const root = document.getElementById('root');
 
 function initialiseGame() {
   const modal = document.getElementById('modal');
-  if (modal) modal.classList.add('hidden');
+  if (modal) modal.classList.remove('show');
 
   deck = createDeck();
   playerHand = [deck.pop(), deck.pop()];
@@ -111,7 +111,7 @@ function showModal(message) {
   const modal = document.getElementById('modal');
   const text = document.getElementById('modal-message');
   text.innerHTML = message;
-  modal.classList.remove('hidden');
+  modal.classList.add('show');
 }
 
 // Start game
