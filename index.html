@@ -7,9 +7,20 @@
     <link href="style.css" rel="stylesheet" />
   </head>
   <body>
+    <div id="balance-display">Coins: <span id="coin-balance">50000</span></div>
     <div id="root"></div>
 
-    <!-- Modal is separate from root so it's unaffected by re-renders -->
+    <div id="bet-section">
+      <h2>Place Your Bet</h2>
+      <div id="bet-buttons">
+        <button onclick="placeBet(100)">100</button>
+        <button onclick="placeBet(1000)">1000</button>
+        <button onclick="placeBet(2500)">2500</button>
+        <button onclick="placeBet('max')">Max</button>
+      </div>
+      <p id="bet-display">Current Bet: <span id="current-bet">0</span></p>
+    </div>
+
     <div id="modal" class="hidden">
       <div id="modal-content">
         <p id="modal-message"></p>
