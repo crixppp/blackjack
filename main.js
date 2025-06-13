@@ -117,7 +117,7 @@ function endGame() {
     message += `<br>Split Hand: ${splitVal} — ${outcome(splitVal, dealerVal)}`;
   }
 
-  showModal(message);
+  setTimeout(() => showModal(message), 1000); // 1 second delay
 }
 
 function outcome(player, dealer) {
